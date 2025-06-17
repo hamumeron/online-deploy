@@ -2,27 +2,45 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>モダンコードシェア</title>
+  <title>コード入力</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs/loader.min.js"></script>
   <script>
     window.require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs' } });
   </script>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.1/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      background-color: #1e1e2f;
+      color: white;
+    }
+
+    #editor {
+      height: calc(100vh - 200px); /* 高さを全画面に合わせて調整 */
+    }
+  </style>
 </head>
-<body class="bg-gray-900 text-white p-8">
+<body class="p-6">
   <h1 class="text-3xl font-bold mb-4">コードを入力して公開</h1>
+
   <form action="/save" method="POST" onsubmit="return sendCode()">
-    <select id="lang" name="lang" class="bg-gray-800 p-2 mb-4 rounded">
-      <option value="javascript">JavaScript</option>
-      <option value="typescript">TypeScript</option>
-      <option value="python">Python</option>
-      <option value="html">HTML</option>
-      <option value="css">CSS</option>
-      <option value="json">JSON</option>
-    </select>
-    <div id="editor" class="h-[500px] border border-gray-600 mb-4 rounded"></div>
+    <div class="flex items-center gap-4 mb-4">
+      <label for="lang" class="text-lg">言語：</label>
+      <select id="lang" name="lang" class="bg-gray-800 p-2 rounded">
+        <option value="javascript">JavaScript</option>
+        <option value="typescript">TypeScript</option>
+        <option value="python">Python</option>
+        <option value="html">HTML</option>
+        <option value="css">CSS</option>
+        <option value="json">JSON</option>
+      </select>
+      <button type="submit" class="ml-auto bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded">保存して公開</button>
+    </div>
+
+    <div id="editor" class="rounded border border-gray-700"></div>
     <input type="hidden" name="code" id="code">
-    <button class="bg-blue-500 px-4 py-2 rounded">保存して公開</button>
   </form>
 
   <script>
@@ -31,7 +49,8 @@
       editor = monaco.editor.create(document.getElementById('editor'), {
         value: '',
         language: 'javascript',
-        theme: 'vs-dark'
+        theme: 'vs-dark',
+        automaticLayout: true
       });
 
       document.getElementById('lang').addEventListener('change', (e) => {
