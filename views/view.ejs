@@ -8,18 +8,32 @@
     window.require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs' } });
   </script>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.1/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      background-color: #1e1e2f;
+      color: white;
+    }
+
+    #editor {
+      height: calc(100vh - 100px);
+    }
+  </style>
 </head>
-<body class="bg-gray-900 text-white p-8">
-  <h1 class="text-3xl font-bold mb-4">公開コード</h1>
-  <div id="editor" class="h-[600px] border border-gray-600 rounded"></div>
+<body class="p-6">
+  <h1 class="text-2xl font-bold mb-4">コード表示</h1>
+  <div id="editor" class="border border-gray-700 rounded"></div>
 
   <script>
     require(['vs/editor/editor.main'], function () {
       monaco.editor.create(document.getElementById('editor'), {
-        value: `<%= code.replace(/`/g, '\\`') %>`,
-        language: "<%= lang %>",
+        value: `<%= code %>`,
+        language: '<%= lang %>',
+        theme: 'vs-dark',
         readOnly: true,
-        theme: 'vs-dark'
+        automaticLayout: true
       });
     });
   </script>
