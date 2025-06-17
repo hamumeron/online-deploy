@@ -1,20 +1,48 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8" />
-  <title>コード公開サービス</title>
-  <link rel="stylesheet" href="/style.css" />
+  <meta charset="UTF-8">
+  <title>モダンコードシェア</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs/loader.min.js"></script>
+  <script>
+    window.require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs' } });
+  </script>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.1/dist/tailwind.min.css" rel="stylesheet">
 </head>
-<body>
-  <h1>コードエディタ</h1>
-  <form action="/save" method="POST">
-    <label>HTML</label><br>
-    <textarea name="html" rows="10" cols="60"></textarea><br>
-    <label>CSS</label><br>
-    <textarea name="css" rows="10" cols="60"></textarea><br>
-    <label>JavaScript</label><br>
-    <textarea name="js" rows="10" cols="60"></textarea><br>
-    <button type="submit">保存して公開</button>
+<body class="bg-gray-900 text-white p-8">
+  <h1 class="text-3xl font-bold mb-4">コードを入力して公開</h1>
+  <form action="/save" method="POST" onsubmit="return sendCode()">
+    <select id="lang" name="lang" class="bg-gray-800 p-2 mb-4 rounded">
+      <option value="javascript">JavaScript</option>
+      <option value="typescript">TypeScript</option>
+      <option value="python">Python</option>
+      <option value="html">HTML</option>
+      <option value="css">CSS</option>
+      <option value="json">JSON</option>
+    </select>
+    <div id="editor" class="h-[500px] border border-gray-600 mb-4 rounded"></div>
+    <input type="hidden" name="code" id="code">
+    <button class="bg-blue-500 px-4 py-2 rounded">保存して公開</button>
   </form>
+
+  <script>
+    let editor;
+    require(['vs/editor/editor.main'], function () {
+      editor = monaco.editor.create(document.getElementById('editor'), {
+        value: '',
+        language: 'javascript',
+        theme: 'vs-dark'
+      });
+
+      document.getElementById('lang').addEventListener('change', (e) => {
+        monaco.editor.setModelLanguage(editor.getModel(), e.target.value);
+      });
+    });
+
+    function sendCode() {
+      document.getElementById('code').value = editor.getValue();
+      return true;
+    }
+  </script>
 </body>
 </html>
