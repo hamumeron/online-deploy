@@ -1,11 +1,27 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8" />
-  <style><%= css %></style>
+  <meta charset="UTF-8">
+  <title>コード表示</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs/loader.min.js"></script>
+  <script>
+    window.require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs' } });
+  </script>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.1/dist/tailwind.min.css" rel="stylesheet">
 </head>
-<body>
-  <%= html %>
-  <script><%= js %></script>
+<body class="bg-gray-900 text-white p-8">
+  <h1 class="text-3xl font-bold mb-4">公開コード</h1>
+  <div id="editor" class="h-[600px] border border-gray-600 rounded"></div>
+
+  <script>
+    require(['vs/editor/editor.main'], function () {
+      monaco.editor.create(document.getElementById('editor'), {
+        value: `<%= code.replace(/`/g, '\\`') %>`,
+        language: "<%= lang %>",
+        readOnly: true,
+        theme: 'vs-dark'
+      });
+    });
+  </script>
 </body>
 </html>
